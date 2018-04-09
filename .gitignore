@@ -35,6 +35,7 @@ dump.rdb
 node_modules
 npm-debug.log*
 superset/assets/version_info.json
+superset/static/*
 
 # IntelliJ
 *.iml

@@ -13,13 +13,12 @@
       "description": "The type of visualization to display"
     },
     "metrics": {
-      "type": "SelectControl",
+      "type": "MetricsControl",
       "multi": true,
       "label": "Metrics",
       "validators": [
         null
       ],
-      "valueKey": "metric_name",
       "description": "One or many metrics to display"
     },
     "percent_metrics": {
@@ -58,15 +57,64 @@
       },
       "renderTrigger": true
     },
-    "metric": {
+    "legend_position": {
+      "label": "Legend Position",
+      "description": "Choose the position of the legend",
       "type": "SelectControl",
+      "clearable": false,
+      "default": "Top right",
+      "choices": [
+        [
+          "tl",
+          "Top left"
+        ],
+        [
+          "tr",
+          "Top right"
+        ],
+        [
+          "bl",
+          "Bottom left"
+        ],
+        [
+          "br",
+          "Bottom right"
+        ]
+      ],
+      "renderTrigger": true
+    },
+    "fill_color_picker": {
+      "label": "Fill Color",
+      "description": " Set the opacity to 0 if you do not want to override the color specified in the GeoJSON",
+      "type": "ColorPickerControl",
+      "default": {
+        "r": 0,
+        "g": 122,
+        "b": 135,
+        "a": 1
+      },
+      "renderTrigger": true
+    },
+    "stroke_color_picker": {
+      "label": "Stroke Color",
+      "description": " Set the opacity to 0 if you do not want to override the color specified in the GeoJSON",
+      "type": "ColorPickerControl",
+      "default": {
+        "r": 0,
+        "g": 122,
+        "b": 135,
+        "a": 1
+      },
+      "renderTrigger": true
+    },
+    "metric": {
+      "type": "MetricsControl",
+      "multi": false,
       "label": "Metric",
       "clearable": false,
-      "description": "Choose the metric",
       "validators": [
         null
-      ],
-      "valueKey": "metric_name"
+      ]
     },
     "metric_2": {
       "type": "SelectControl",
@@ -82,6 +130,7 @@
     "stacked_style": {
       "type": "SelectControl",
       "label": "Stacked Style",
+      "renderTrigger": true,
       "choices": [
         [
           "stack",
@@ -694,6 +743,13 @@
       "description": "Whether to include the time granularity as defined in the time section",
       "default": false
     },
+    "autozoom": {
+      "type": "CheckboxControl",
+      "label": "Auto Zoom",
+      "default": true,
+      "renderTrigger": true,
+      "description": "When checked, the map will zoom to your data after each query"
+    },
     "show_perc": {
       "type": "CheckboxControl",
       "label": "Show percentage",
@@ -733,6 +789,7 @@
       "type": "CheckboxControl",
       "label": "Sort Bars",
       "default": false,
+      "renderTrigger": true,
       "description": "Sort bars by x labels."
     },
     "combine_metric": {
@@ -926,7 +983,32 @@
       "multi": true,
       "label": "Columns",
       "default": [],
-      "description": "Columns to display"
+      "description": "Columns to display",
+      "valueKey": "column_name"
+    },
+    "spatial": {
+      "type": "SpatialControl",
+      "label": "Longitude & Latitude",
+      "validators": [
+        null
+      ],
+      "description": "Point to your spatial columns"
+    },
+    "start_spatial": {
+      "type": "SpatialControl",
+      "label": "Start Longitude & Latitude",
+      "validators": [
+        null
+      ],
+      "description": "Point to your spatial columns"
+    },
+    "end_spatial": {
+      "type": "SpatialControl",
+      "label": "End Longitude & Latitude",
+      "validators": [
+        null
+      ],
+      "description": "Point to your spatial columns"
     },
     "longitude": {
       "type": "SelectControl",
@@ -945,6 +1027,84 @@
         null
       ],
       "description": "Select the latitude column"
+    },
+    "geojson": {
+      "type": "SelectControl",
+      "label": "GeoJson Column",
+      "validators": [
+        null
+      ],
+      "description": "Select the geojson column"
+    },
+    "polygon": {
+      "type": "SelectControl",
+      "label": "Polygon Column",
+      "validators": [
+        null
+      ],
+      "description": "Select the polygon column. Each row should contain JSON.array(N) of [longitude, latitude] points"
+    },
+    "point_radius_scale": {
+      "type": "SelectControl",
+      "freeForm": true,
+      "label": "Point Radius Scale",
+      "validators": [
+        null
+      ],
+      "default": null,
+      "choices": [
+        [
+          0,
+          "0"
+        ],
+        [
+          100,
+          "100"
+        ],
+        [
+          200,
+          "200"
+        ],
+        [
+          300,
+          "300"
+        ],
+        [
+          500,
+          "500"
+        ]
+      ]
+    },
+    "stroke_width": {
+      "type": "SelectControl",
+      "freeForm": true,
+      "label": "Stroke Width",
+      "validators": [
+        null
+      ],
+      "default": null,
+      "choices": [
+        [
+          1,
+          "1"
+        ],
+        [
+          2,
+          "2"
+        ],
+        [
+          3,
+          "3"
+        ],
+        [
+          4,
+          "4"
+        ],
+        [
+          5,
+          "5"
+        ]
+      ]
     },
     "all_columns_x": {
       "type": "SelectControl",
@@ -1058,55 +1218,55 @@
       "default": "one day",
       "choices": [
         [
-          "all",
+          null,
           "all"
         ],
         [
-          "5 seconds",
+          "PT5S",
           "5 seconds"
         ],
         [
-          "30 seconds",
+          "PT30S",
           "30 seconds"
         ],
         [
-          "1 minute",
+          "PT1M",
           "1 minute"
         ],
         [
-          "5 minutes",
+          "PT5M",
           "5 minutes"
         ],
         [
-          "1 hour",
+          "PT1H",
           "1 hour"
         ],
         [
-          "6 hour",
+          "PT6H",
           "6 hour"
         ],
         [
-          "1 day",
+          "P1D",
           "1 day"
         ],
         [
-          "7 days",
+          "P7D",
           "7 days"
         ],
         [
-          "week",
+          "P1W",
           "week"
         ],
         [
-          "week_starting_sunday",
+          "P1W",
           "week_starting_sunday"
         ],
         [
-          "week_ending_saturday",
+          "P1W",
           "week_ending_saturday"
         ],
         [
-          "month",
+          "P1M",
           "month"
         ]
       ],
@@ -1429,6 +1589,7 @@
     "treemap_ratio": {
       "type": "TextControl",
       "label": "Ratio",
+      "renderTrigger": true,
       "isFloat": true,
       "default": 1.618033988749895,
       "description": "Target aspect ratio for treemap tiles."
@@ -1441,8 +1602,16 @@
       "default": ".3s",
       "choices": [
         [
+          ".1s",
+          ".1s | 12k"
+        ],
+        [
           ".3s",
           ".3s | 12.3k"
+        ],
+        [
+          ".1%",
+          ".1% | 12.3%"
         ],
         [
           ".3%",
@@ -1474,7 +1643,7 @@
       "validators": [
         null
       ],
-      "default": null,
+      "default": 10000,
       "choices": [
         [
           10,
@@ -1551,8 +1720,7 @@
           "500"
         ]
       ],
-      "default": 50,
-      "description": "Limits the number of time series that get displayed"
+      "description": "Limits the number of time series that get displayed. A sub query (or an extra phase where sub queries are not supported) is applied to limit the number of time series that get fetched and displayed. This feature is useful when grouping by high cardinality dimension(s)."
     },
     "timeseries_limit_metric": {
       "type": "SelectControl",
@@ -1598,6 +1766,7 @@
       "type": "TextControl",
       "label": "Multiplier",
       "isFloat": true,
+      "renderTrigger": true,
       "default": 1,
       "description": "Factor to multiply the metric by"
     },
@@ -1684,15 +1853,23 @@
       "default": ""
     },
     "where": {
-      "type": "TextControl",
+      "type": "TextAreaControl",
       "label": "Custom WHERE clause",
       "default": "",
+      "language": "sql",
+      "minLines": 2,
+      "maxLines": 10,
+      "offerEditInModal": false,
       "description": "The text in this box gets included in your query's WHERE clause, as an AND to other criteria. You can include complex expression, parenthesis and anything else supported by the backend it is directed towards."
     },
     "having": {
-      "type": "TextControl",
+      "type": "TextAreaControl",
       "label": "Custom HAVING clause",
       "default": "",
+      "language": "sql",
+      "minLines": 2,
+      "maxLines": 10,
+      "offerEditInModal": false,
       "description": "The text in this box gets included in your query's HAVING clause, as an AND to other criteria. You can include complex expression, parenthesis and anything else supported by the backend it is directed towards."
     },
     "compare_lag": {
@@ -1711,6 +1888,7 @@
       "freeForm": true,
       "label": "Table Timestamp Format",
       "default": "%Y-%m-%d %H:%M:%S",
+      "renderTrigger": true,
       "validators": [
         null
       ],
@@ -1719,6 +1897,10 @@
         [
           "smart_date",
           "Adaptative formating"
+        ],
+        [
+          "%d/%m/%Y",
+          "%d/%m/%Y | 14/01/2019"
         ],
         [
           "%m/%d/%Y",
@@ -1731,6 +1913,10 @@
         [
           "%Y-%m-%d %H:%M:%S",
           "%Y-%m-%d %H:%M:%S | 2019-01-14 01:32:10"
+        ],
+        [
+          "%d-%m-%Y %H:%M:%S",
+          "%Y-%m-%d %H:%M:%S | 14-01-2019 01:32:10"
         ],
         [
           "%H:%M:%S",
@@ -1783,6 +1969,7 @@
     "page_length": {
       "type": "SelectControl",
       "freeForm": true,
+      "renderTrigger": true,
       "label": "Page Length",
       "default": 0,
       "choices": [
@@ -1833,8 +2020,16 @@
       "default": ".3s",
       "choices": [
         [
+          ".1s",
+          ".1s | 12k"
+        ],
+        [
           ".3s",
           ".3s | 12.3k"
+        ],
+        [
+          ".1%",
+          ".1% | 12.3%"
         ],
         [
           ".3%",
@@ -1871,6 +2066,10 @@
           "Adaptative formating"
         ],
         [
+          "%d/%m/%Y",
+          "%d/%m/%Y | 14/01/2019"
+        ],
+        [
           "%m/%d/%Y",
           "%m/%d/%Y | 01/14/2019"
         ],
@@ -1881,6 +2080,10 @@
         [
           "%Y-%m-%d %H:%M:%S",
           "%Y-%m-%d %H:%M:%S | 2019-01-14 01:32:10"
+        ],
+        [
+          "%d-%m-%Y %H:%M:%S",
+          "%Y-%m-%d %H:%M:%S | 14-01-2019 01:32:10"
         ],
         [
           "%H:%M:%S",
@@ -1897,8 +2100,16 @@
       "default": ".3s",
       "choices": [
         [
+          ".1s",
+          ".1s | 12k"
+        ],
+        [
           ".3s",
           ".3s | 12.3k"
+        ],
+        [
+          ".1%",
+          ".1% | 12.3%"
         ],
         [
           ".3%",
@@ -1930,8 +2141,16 @@
       "default": ".3s",
       "choices": [
         [
+          ".1s",
+          ".1s | 12k"
+        ],
+        [
           ".3s",
           ".3s | 12.3k"
+        ],
+        [
+          ".1%",
+          ".1% | 12.3%"
         ],
         [
           ".3%",
@@ -1968,6 +2187,10 @@
           "Adaptative formating"
         ],
         [
+          "%d/%m/%Y",
+          "%d/%m/%Y | 14/01/2019"
+        ],
+        [
           "%m/%d/%Y",
           "%m/%d/%Y | 01/14/2019"
         ],
@@ -1978,6 +2201,10 @@
         [
           "%Y-%m-%d %H:%M:%S",
           "%Y-%m-%d %H:%M:%S | 2019-01-14 01:32:10"
+        ],
+        [
+          "%d-%m-%Y %H:%M:%S",
+          "%Y-%m-%d %H:%M:%S | 14-01-2019 01:32:10"
         ],
         [
           "%H:%M:%S",
@@ -2063,6 +2290,7 @@
       "type": "SelectControl",
       "label": "Label Type",
       "default": "key",
+      "renderTrigger": true,
       "choices": [
         [
           "key",
@@ -2159,16 +2387,31 @@
       "description": "Whether to make the grid 3D"
     },
     "show_brush": {
-      "type": "CheckboxControl",
-      "label": "Range Filter",
+      "type": "SelectControl",
+      "label": "Show Range Filter",
       "renderTrigger": true,
-      "default": false,
+      "clearable": false,
+      "default": "auto",
+      "choices": [
+        [
+          "yes",
+          "Yes"
+        ],
+        [
+          "no",
+          "No"
+        ],
+        [
+          "auto",
+          "Auto"
+        ]
+      ],
       "description": "Whether to display the time range interactive selector"
     },
     "date_filter": {
       "type": "CheckboxControl",
       "label": "Date Filter",
-      "default": false,
+      "default": true,
       "description": "Whether to include a time filter"
     },
     "show_sqla_time_granularity": {
@@ -2211,6 +2454,7 @@
     "table_filter": {
       "type": "CheckboxControl",
       "label": "Table Filter",
+      "renderTrigger": true,
       "default": false,
       "description": "Whether to apply filter when table cell is clicked"
     },
@@ -2253,14 +2497,14 @@
       "type": "CheckboxControl",
       "label": "X bounds",
       "renderTrigger": true,
-      "default": true,
+      "default": false,
       "description": "Whether to display the min and max values of the X axis"
     },
     "y_axis_showminmax": {
       "type": "CheckboxControl",
       "label": "Y bounds",
       "renderTrigger": true,
-      "default": true,
+      "default": false,
       "description": "Whether to display the min and max values of the Y axis"
     },
     "rich_tooltip": {
@@ -2359,6 +2603,7 @@
     "mapbox_style": {
       "type": "SelectControl",
       "label": "Map Style",
+      "clearable": false,
       "renderTrigger": true,
       "choices": [
         [
@@ -2386,7 +2631,7 @@
           "Outdoors"
         ]
       ],
-      "default": "mapbox://styles/mapbox/streets-v9",
+      "default": "mapbox://styles/mapbox/light-v9",
       "description": "Base layer map style"
     },
     "clustering_radius": {
@@ -2437,6 +2682,10 @@
     "point_radius_fixed": {
       "type": "FixedOrMetricControl",
       "label": "Point Size",
+      "default": {
+        "type": "fix",
+        "value": 1000
+      },
       "description": "Fixed point radius"
     },
     "point_radius": {
@@ -2508,7 +2757,7 @@
     "viewport": {
       "type": "ViewportControl",
       "label": "Viewport",
-      "renderTrigger": true,
+      "renderTrigger": false,
       "description": "Parameters related to the view and perspective on the map",
       "default": {
         "longitude": 6.85236157047845,
@@ -2516,7 +2765,8 @@
         "zoom": 1,
         "bearing": 0,
         "pitch": 0
-      }
+      },
+      "dontRefreshOnChange": true
     },
     "viewport_zoom": {
       "type": "TextControl",
@@ -2639,7 +2889,8 @@
       "label": "",
       "default": [],
       "description": "Annotation Layers",
-      "renderTrigger": true
+      "renderTrigger": true,
+      "tabOverride": "data"
     },
     "having_filters": {
       "type": "FilterControl",
@@ -2889,6 +3140,18 @@
           "#329262",
           "#5574a6",
           "#3b3eac"
+        ],
+        "lyftColors": [
+          "#EA0B8C",
+          "#6C838E",
+          "#29ABE2",
+          "#33D9C1",
+          "#9DACB9",
+          "#7560AA",
+          "#2D5584",
+          "#831C4A",
+          "#333D47",
+          "#AC2077"
         ]
       }
     },
@@ -2917,6 +3180,13 @@
         null
       ],
       "controlName": "TimeSeriesColumnControl"
+    },
+    "rose_area_proportion": {
+      "type": "CheckboxControl",
+      "label": "Use Area Proportions",
+      "description": "Check if the Rose Chart should use segment area instead of segment radius for proportioning",
+      "default": false,
+      "renderTrigger": true
     },
     "time_series_option": {
       "type": "SelectControl",
@@ -2984,12 +3254,380 @@
       "default": "5",
       "description": "The maximum number of subdivisions of each group; lower values are pruned first"
     },
+    "min_radius": {
+      "type": "TextControl",
+      "label": "Minimum Radius",
+      "isFloat": true,
+      "validators": [
+        null
+      ],
+      "renderTrigger": true,
+      "default": 2,
+      "description": "Minimum radius size of the circle, in pixels. As the zoom level changes, this insures that the circle respects this minimum radius."
+    },
+    "max_radius": {
+      "type": "TextControl",
+      "label": "Maximum Radius",
+      "isFloat": true,
+      "validators": [
+        null
+      ],
+      "renderTrigger": true,
+      "default": 250,
+      "description": "Maxium radius size of the circle, in pixels. As the zoom level changes, this insures that the circle respects this maximum radius."
+    },
     "partition_threshold": {
       "type": "TextControl",
       "label": "Partition Threshold",
       "isFloat": true,
       "default": "0.05",
       "description": "Partitions whose height to parent height proportions are below this value are pruned"
+    },
+    "line_column": {
+      "type": "SelectControl",
+      "label": "Lines column",
+      "default": null,
+      "description": "The database columns that contains lines information",
+      "validators": [
+        null
+      ]
+    },
+    "line_type": {
+      "type": "SelectControl",
+      "label": "Lines encoding",
+      "clearable": false,
+      "default": "json",
+      "description": "The encoding format of the lines",
+      "choices": [
+        [
+          "polyline",
+          "Polyline"
+        ],
+        [
+          "json",
+          "JSON"
+        ]
+      ]
+    },
+    "line_width": {
+      "type": "TextControl",
+      "label": "Line width",
+      "renderTrigger": true,
+      "isInt": true,
+      "default": 10,
+      "description": "The width of the lines"
+    },
+    "reverse_long_lat": {
+      "type": "CheckboxControl",
+      "label": "Reverse Lat & Long",
+      "default": false
+    },
+    "deck_slices": {
+      "type": "SelectAsyncControl",
+      "multi": true,
+      "label": "deck.gl charts",
+      "validators": [
+        null
+      ],
+      "default": [],
+      "description": "Pick a set of deck.gl charts to layer on top of one another",
+      "dataEndpoint": "/sliceasync/api/read?_flt_0_viz_type=deck_&_flt_7_viz_type=deck_multi",
+      "placeholder": "Select charts",
+      "onAsyncErrorMessage": "Error while fetching charts"
+    },
+    "js_data_mutator": {
+      "type": "TextAreaControl",
+      "language": "javascript",
+      "label": "Javascript data interceptor",
+      "description": "Define a javascript function that receives the data array used in the visualization and is expected to return a modified version of that array. This can be used to alter properties of the data, filter, or enrich the array.",
+      "height": 100,
+      "default": "",
+      "aboveEditorSection": {
+        "type": "div",
+        "key": null,
+        "ref": null,
+        "props": {
+          "children": [
+            {
+              "type": "p",
+              "key": null,
+              "ref": null,
+              "props": {
+                "children": "Define a javascript function that receives the data array used in the visualization and is expected to return a modified version of that array. This can be used to alter properties of the data, filter, or enrich the array."
+              },
+              "_owner": null,
+              "_store": {}
+            },
+            {
+              "type": "p",
+              "key": null,
+              "ref": null,
+              "props": {
+                "children": {
+                  "type": "div",
+                  "key": null,
+                  "ref": null,
+                  "props": {
+                    "children": [
+                      "For more information about objects are in context in the scope of this function, refer to the",
+                      {
+                        "type": "a",
+                        "key": null,
+                        "ref": null,
+                        "props": {
+                          "href": "https://github.com/apache/incubator-superset/blob/master/superset/assets/javascripts/modules/sandbox.js",
+                          "children": [
+                            " source code of Superset's sandboxed parser",
+                            "."
+                          ]
+                        },
+                        "_owner": null,
+                        "_store": {}
+                      },
+                      "."
+                    ]
+                  },
+                  "_owner": null,
+                  "_store": {}
+                }
+              },
+              "_owner": null,
+              "_store": {}
+            },
+            null
+          ]
+        },
+        "_owner": null,
+        "_store": {}
+      }
+    },
+    "js_data": {
+      "type": "TextAreaControl",
+      "language": "javascript",
+      "label": "Javascript data mutator",
+      "description": "Define a function that receives intercepts the data objects and can mutate it",
+      "height": 100,
+      "default": "",
+      "aboveEditorSection": {
+        "type": "div",
+        "key": null,
+        "ref": null,
+        "props": {
+          "children": [
+            {
+              "type": "p",
+              "key": null,
+              "ref": null,
+              "props": {
+                "children": "Define a function that receives intercepts the data objects and can mutate it"
+              },
+              "_owner": null,
+              "_store": {}
+            },
+            {
+              "type": "p",
+              "key": null,
+              "ref": null,
+              "props": {
+                "children": {
+                  "type": "div",
+                  "key": null,
+                  "ref": null,
+                  "props": {
+                    "children": [
+                      "For more information about objects are in context in the scope of this function, refer to the",
+                      {
+                        "type": "a",
+                        "key": null,
+                        "ref": null,
+                        "props": {
+                          "href": "https://github.com/apache/incubator-superset/blob/master/superset/assets/javascripts/modules/sandbox.js",
+                          "children": [
+                            " source code of Superset's sandboxed parser",
+                            "."
+                          ]
+                        },
+                        "_owner": null,
+                        "_store": {}
+                      },
+                      "."
+                    ]
+                  },
+                  "_owner": null,
+                  "_store": {}
+                }
+              },
+              "_owner": null,
+              "_store": {}
+            },
+            null
+          ]
+        },
+        "_owner": null,
+        "_store": {}
+      }
+    },
+    "js_tooltip": {
+      "type": "TextAreaControl",
+      "language": "javascript",
+      "label": "Javascript tooltip generator",
+      "description": "Define a function that receives the input and outputs the content for a tooltip",
+      "height": 100,
+      "default": "",
+      "aboveEditorSection": {
+        "type": "div",
+        "key": null,
+        "ref": null,
+        "props": {
+          "children": [
+            {
+              "type": "p",
+              "key": null,
+              "ref": null,
+              "props": {
+                "children": "Define a function that receives the input and outputs the content for a tooltip"
+              },
+              "_owner": null,
+              "_store": {}
+            },
+            {
+              "type": "p",
+              "key": null,
+              "ref": null,
+              "props": {
+                "children": {
+                  "type": "div",
+                  "key": null,
+                  "ref": null,
+                  "props": {
+                    "children": [
+                      "For more information about objects are in context in the scope of this function, refer to the",
+                      {
+                        "type": "a",
+                        "key": null,
+                        "ref": null,
+                        "props": {
+                          "href": "https://github.com/apache/incubator-superset/blob/master/superset/assets/javascripts/modules/sandbox.js",
+                          "children": [
+                            " source code of Superset's sandboxed parser",
+                            "."
+                          ]
+                        },
+                        "_owner": null,
+                        "_store": {}
+                      },
+                      "."
+                    ]
+                  },
+                  "_owner": null,
+                  "_store": {}
+                }
+              },
+              "_owner": null,
+              "_store": {}
+            },
+            null
+          ]
+        },
+        "_owner": null,
+        "_store": {}
+      }
+    },
+    "js_onclick_href": {
+      "type": "TextAreaControl",
+      "language": "javascript",
+      "label": "Javascript onClick href",
+      "description": "Define a function that returns a URL to navigate to when user clicks",
+      "height": 100,
+      "default": "",
+      "aboveEditorSection": {
+        "type": "div",
+        "key": null,
+        "ref": null,
+        "props": {
+          "children": [
+            {
+              "type": "p",
+              "key": null,
+              "ref": null,
+              "props": {
+                "children": "Define a function that returns a URL to navigate to when user clicks"
+              },
+              "_owner": null,
+              "_store": {}
+            },
+            {
+              "type": "p",
+              "key": null,
+              "ref": null,
+              "props": {
+                "children": {
+                  "type": "div",
+                  "key": null,
+                  "ref": null,
+                  "props": {
+                    "children": [
+                      "For more information about objects are in context in the scope of this function, refer to the",
+                      {
+                        "type": "a",
+                        "key": null,
+                        "ref": null,
+                        "props": {
+                          "href": "https://github.com/apache/incubator-superset/blob/master/superset/assets/javascripts/modules/sandbox.js",
+                          "children": [
+                            " source code of Superset's sandboxed parser",
+                            "."
+                          ]
+                        },
+                        "_owner": null,
+                        "_store": {}
+                      },
+                      "."
+                    ]
+                  },
+                  "_owner": null,
+                  "_store": {}
+                }
+              },
+              "_owner": null,
+              "_store": {}
+            },
+            null
+          ]
+        },
+        "_owner": null,
+        "_store": {}
+      }
+    },
+    "js_columns": {
+      "type": "SelectControl",
+      "multi": true,
+      "label": "Extra data for JS",
+      "default": [],
+      "includeTime": false,
+      "description": "List of extra columns made available in Javascript functions",
+      "valueKey": "column_name"
+    },
+    "stroked": {
+      "type": "CheckboxControl",
+      "label": "Stroked",
+      "renderTrigger": true,
+      "description": "Whether to display the stroke",
+      "default": false
+    },
+    "filled": {
+      "type": "CheckboxControl",
+      "label": "Filled",
+      "renderTrigger": true,
+      "description": "Whether to fill the objects",
+      "default": false
+    },
+    "normalized": {
+      "type": "CheckboxControl",
+      "label": "Normalized",
+      "renderTrigger": true,
+      "description": "Whether to normalize the histogram",
+      "default": false
     }
   }
 }
