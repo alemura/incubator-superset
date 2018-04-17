@@ -162,9 +162,10 @@ def execute_sql(
     # Limit enforced only for retrieving the data, not for the CTA queries.
     superset_query = SupersetQuery(rendered_query)
     executed_sql = superset_query.stripped()
-    if not superset_query.is_select() and not database.allow_dml:
-        return handle_error(
-            'Only `SELECT` statements are allowed against this database')
+    
+    #if not superset_query.is_select() and not database.allow_dml:
+        #return handle_error(
+            #'Only `SELECT` statements are allowed against this database')
     if query.select_as_cta:
         if not superset_query.is_select():
             return handle_error(

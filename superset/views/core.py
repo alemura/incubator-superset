@@ -43,6 +43,7 @@ from superset.forms import CsvToDatabaseForm
 from superset.jinja_context import get_template_processor
 from superset.legacy import cast_form_data
 import superset.models.core as models
+import superset.moto_models.models as moto_models
 from superset.models.sql_lab import Query
 from superset.sql_parse import SupersetQuery
 from superset.utils import (
@@ -54,6 +55,9 @@ from .base import (
     json_error_response, SupersetFilter, SupersetModelView, YamlExportMixin,
 )
 from .utils import bootstrap_user_data
+
+## MOTO IMPORT ##
+from flask_appbuilder.views import ModelView, CompactCRUDMixin, MasterDetailView
 
 config = app.config
 stats_logger = config.get('STATS_LOGGER')
@@ -2742,6 +2746,741 @@ appbuilder.add_link(
     category_icon='fa-wrench')
 appbuilder.add_separator('Sources')
 
+
+
+###############################################################
+                            # MOTO #
+###############################################################
+
+class ConfigMarkets(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_Markets)
+
+    label_columns = {
+                    'mkt_id' : 'Id',
+                    'mkt_lname' : 'Market Name',
+                    'mkt_country' : 'Market Country',
+                    'mkt_city' : 'City',
+                    'mkt_url' : 'URL'
+                    }
+    list_columns = ['mkt_id', 'mkt_lname', 'mkt_country', 'mkt_city', 'mkt_url']
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {'fields':['mkt_id', 'mkt_lname']}
+                        ),
+                        (
+                            'Market Info',
+                            {'fields':['mkt_country', 'mkt_city', 'mkt_url'],'expanded':False}
+                        ),
+                     ]
+    add_columns = ['mkt_id', 'mkt_lname', 'mkt_country', 'mkt_city', 'mkt_url']
+    edit_columns = add_columns
+
+
+class ConfigUAType(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_UA_Type)
+
+    label_columns = {
+                    'ua_type_id' : 'Id',
+                    'ua_type_ln' : 'Underlying Asset Type Name'
+                    }
+    list_columns = ['ua_type_id', 'ua_type_ln']
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {'fields':['ua_type_id', 'ua_type_ln']}
+                        )
+                     ]
+    add_columns = ['ua_type_id', 'ua_type_ln']
+    edit_columns = add_columns
+
+
+class ConfigDataProvider(SupersetModelView):
+    datamodel = SQLAInterface(moto_models.C_Data_Provider)
+
+    label_columns = {
+                    'dp_id' : 'Id',
+                    'dp_lname' : 'Data Provider Name',
+                    'dp_d' : 'Description',
+                    'dp_country' : 'Country',
+                    'dp_city' : 'City',
+                    'dp_url' : 'URL',
+                    'fy_blcd' : 'FY_BLCD',
+                    'separator_bldc_opt' : 'Option Separator',
+                    'cp_position' : 'CP Position'
+                    }
+    list_columns = [
+                    'dp_id',
+                    'dp_lname',
+                    'dp_d',
+                    'dp_country',
+                    'dp_city',
+                    'dp_url',
+                    'fy_blcd',
+                    'separator_bldc_opt',
+                    'cp_position'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'dp_id',
+                                        'dp_lname',
+                                        'dp_d',
+                                        'dp_country',
+                                        'dp_city',
+                                        'dp_url',
+                                        'fy_blcd',
+                                        'separator_bldc_opt',
+                                        'cp_position'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'dp_id',
+                    'dp_lname',
+                    'dp_d',
+                    'dp_country',
+                    'dp_city',
+                    'dp_url',
+                    'fy_blcd',
+                    'separator_bldc_opt',
+                    'cp_position'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigDpAPI(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_DP_API)
+
+    label_columns = {
+                    'dp_id' : 'dp_id',
+                    'dp_api_id' : 'dp_api_id',
+                    'dp_api_s' : 'dp_api_s',
+                    'separatore' : 'separatore'
+                    }
+    list_columns = [
+                    'dp_id', 
+                    'dp_api_id', 
+                    'dp_api_s', 
+                    'separatore'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'dp_id', 
+                                        'dp_api_id', 
+                                        'dp_api_s', 
+                                        'separatore'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'dp_id', 
+                    'dp_api_id', 
+                    'dp_api_s', 
+                    'separatore'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigDpApiInput(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_DP_API_Input)
+    
+    label_columns = {
+                    'dp_api_id' : 'dp_api_id',
+                    'input_item_id' : 'input_item_id',
+                    'input_item_s' : 'input_item_s',
+                    'input_item_description' : 'input_item_description',
+                    'mandatory' : 'mandatory'
+                    }
+    list_columns = [
+                    'dp_api_id', 
+                    'input_item_id', 
+                    'input_item_s', 
+                    'input_item_description',
+                    'mandatory'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'dp_api_id', 
+                                        'input_item_id', 
+                                        'input_item_s', 
+                                        'input_item_description',
+                                        'mandatory'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'dp_api_id', 
+                    'input_item_id', 
+                    'input_item_s', 
+                    'input_item_description',
+                    'mandatory'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigDpApiOutput(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_DP_API_Output)
+    
+    label_columns = {
+                    'dp_api_id' : 'dp_api_id',
+                    'output_api' : 'output_api',
+                    'output_api_id' : 'output_api_id',
+                    'separatore' : 'separatore'
+                    }
+    list_columns = [
+                    'dp_api_id', 
+                    'output_api', 
+                    'output_api_id', 
+                    'separatore'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'dp_api_id', 
+                                        'output_api', 
+                                        'output_api_id', 
+                                        'separatore'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'dp_api_id', 
+                    'output_api', 
+                    'output_api_id', 
+                    'separatore'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigMdataType(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_MData_Type)
+    
+    label_columns = {
+                    'metric_type_id' : 'metric_type_id',
+                    'metric_type_d' : 'metric_type_d'
+                    }
+    list_columns = [
+                    'metric_type_id', 
+                    'metric_type_d'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'metric_type_id', 
+                                        'metric_type_d'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'metric_type_id', 
+                    'metric_type_d'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigMdataToDp(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_MData_To_DP)
+    
+    label_columns = {
+                    'metric_id' : 'metric_id',
+                    'dp_id' : 'dp_id',
+                    'metric_dp_n' : 'metric_dp_n'
+                    }
+    list_columns = [
+                    'metric_id', 
+                    'dp_id', 
+                    'metric_dp_n'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'metric_id', 
+                                        'dp_id', 
+                                        'metric_dp_n'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'metric_id', 
+                    'dp_id', 
+                    'metric_dp_n'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigMdata(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_MData)
+    
+    label_columns = {
+                    'metric_id' : 'metric_id',
+                    'metric_d' : 'metric_d',
+                    'metric_type_id' : 'metric_type_id',
+                    'metric_um' : 'metric_um'
+                    }
+    list_columns = [
+                    'metric_id', 
+                    'metric_d', 
+                    'metric_type_id', 
+                    'metric_um'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'metric_id', 
+                                        'metric_d', 
+                                        'metric_type_id', 
+                                        'metric_um'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'metric_id', 
+                    'metric_d', 
+                    'metric_type_id', 
+                    'metric_um'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigSa(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_SA)
+    
+    label_columns = {
+                    'sa_id' : 'sa_id',
+                    'sa_d' : 'sa_d'
+                    }
+    list_columns = [
+                    'sa_id', 
+                    'sa_d'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'sa_id', 
+                                        'sa_d'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'sa_id', 
+                    'sa_d'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigSaOut(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_SAOut)
+    
+    label_columns = {
+                    'sa_id' : 'sa_id',
+                    'sa_output_id' : 'sa_output_id',
+                    'sa_output_d' : 'sa_output_d',
+                    'sa_output_dtype' : 'sa_output_dtype',
+                    'sa_output_um' : 'sa_output_um'
+                    }
+    list_columns = [
+                    'sa_id', 
+                    'sa_output_id', 
+                    'sa_output_d', 
+                    'sa_output_dtype', 
+                    'sa_output_um'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'sa_id', 
+                                        'sa_output_id', 
+                                        'sa_output_d', 
+                                        'sa_output_dtype', 
+                                        'sa_output_um'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'sa_id', 
+                    'sa_output_id', 
+                    'sa_output_d', 
+                    'sa_output_dtype', 
+                    'sa_output_um'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigSaPar(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_SAPar)
+    
+    label_columns = {
+                    'sa_id' : 'sa_id',
+                    'sapar_id' : 'sapar_id',
+                    'sapar_d' : 'sapar_d',
+                    'sapar_dtype' : 'sapar_dtype',
+                    'sapar_um' : 'sapar_um',
+                    'sapar_fixed' : 'sapar_fixed'
+                    }
+    list_columns = [
+                    'sa_id', 
+                    'sapar_id', 
+                    'sapar_d', 
+                    'sapar_dtype', 
+                    'sapar_um', 
+                    'sapar_fixed'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'sa_id', 
+                                        'sapar_id', 
+                                        'sapar_d', 
+                                        'sapar_dtype', 
+                                        'sapar_um', 
+                                        'sapar_fixed'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'sa_id', 
+                    'sapar_id', 
+                    'sapar_d', 
+                    'sapar_dtype', 
+                    'sapar_um', 
+                    'sapar_fixed'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigUaTradable(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_UA_Tradable)
+    
+    label_columns = {
+                    'uat_id' : 'uat_id',
+                    'ua_id' : 'ua_id',
+                    'mkt_id' : 'mkt_id',
+                    'mini' : 'mini',
+                    'uat_blcd' : 'uat_blcd',
+                    'ctr_size' : 'ctr_size',
+                    'ctr_um' : 'ctr_um',
+                    'trd_ccy' : 'trd_ccy',
+                    'trd_ccy_ce' : 'trd_ccy_ce',
+                    'k_grn' : 'k_grn',
+                    'k_grn_um' : 'k_grn_um',
+                    'dd_jan' : 'dd_jan',
+                    'dd_feb' : 'dd_feb',
+                    'dd_mar' : 'dd_mar',
+                    'dd_apr' : 'dd_apr',
+                    'dd_mag' : 'dd_mag',
+                    'dd_giu' : 'dd_giu',
+                    'dd_lug' : 'dd_lug',
+                    'dd_ago' : 'dd_ago',
+                    'dd_set' : 'dd_set',
+                    'dd_ott' : 'dd_ott',
+                    'dd_nov' : 'dd_nov',
+                    'dd_dic' : 'dd_dic'
+                    }
+    list_columns = [
+                    'uat_id',
+                    'ua_id',
+                    'mkt_id',
+                    'mini',
+                    'uat_blcd',
+                    'ctr_size',
+                    'ctr_um',
+                    'trd_ccy',
+                    'trd_ccy_ce',
+                    'k_grn',
+                    'k_grn_um',
+                    'dd_jan',
+                    'dd_feb',
+                    'dd_mar',
+                    'dd_apr',
+                    'dd_mag',
+                    'dd_giu',
+                    'dd_lug',
+                    'dd_ago',
+                    'dd_set',
+                    'dd_ott',
+                    'dd_nov',
+                    'dd_dic'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'uat_id',
+                                        'ua_id',
+                                        'mkt_id',
+                                        'mini',
+                                        'uat_blcd',
+                                        'ctr_size',
+                                        'ctr_um',
+                                        'trd_ccy',
+                                        'trd_ccy_ce',
+                                        'k_grn',
+                                        'k_grn_um',
+                                        'dd_jan',
+                                        'dd_feb',
+                                        'dd_mar',
+                                        'dd_apr',
+                                        'dd_mag',
+                                        'dd_giu',
+                                        'dd_lug',
+                                        'dd_ago',
+                                        'dd_set',
+                                        'dd_ott',
+                                        'dd_nov',
+                                        'dd_dic'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'uat_id',
+                    'ua_id',
+                    'mkt_id',
+                    'mini',
+                    'uat_blcd',
+                    'ctr_size',
+                    'ctr_um',
+                    'trd_ccy',
+                    'trd_ccy_ce',
+                    'k_grn',
+                    'k_grn_um',
+                    'dd_jan',
+                    'dd_feb',
+                    'dd_mar',
+                    'dd_apr',
+                    'dd_mag',
+                    'dd_giu',
+                    'dd_lug',
+                    'dd_ago',
+                    'dd_set',
+                    'dd_ott',
+                    'dd_nov',
+                    'dd_dic'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigUatToDp(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_UAT_To_DP)
+    
+    label_columns = {
+                    'uat_id' : 'uat_id',
+                    'dp_id' : 'dp_id',
+                    'ua_dpcd' : 'ua_dpcd',
+                    'trd_ccy' : 'trd_ccy',
+                    'trd_ccy_ce' : 'trd_ccy_ce'
+                    }
+    list_columns = [
+                    'uat_id', 
+                    'dp_id', 
+                    'ua_dpcd', 
+                    'trd_ccy', 
+                    'trd_ccy_ce'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'uat_id', 
+                                        'dp_id', 
+                                        'ua_dpcd', 
+                                        'trd_ccy', 
+                                        'trd_ccy_ce'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'uat_id', 
+                    'dp_id', 
+                    'ua_dpcd', 
+                    'trd_ccy', 
+                    'trd_ccy_ce'
+                    ]
+    edit_columns = add_columns
+
+
+class ConfigUnderlyingAsset(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(moto_models.C_Underlying_Asset)
+    
+    label_columns = {
+                    'ua_id' : 'ua_id',
+                    'ua_lname' : 'ua_lname',
+                    'ua_d' : 'ua_d',
+                    'ua_type_id' : 'ua_type_id'
+                    }
+    list_columns = [
+                    'ua_id', 
+                    'ua_lname', 
+                    'ua_d', 
+                    'ua_type_id'
+                    ]
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {
+                                'fields':[
+                                        'ua_id', 
+                                        'ua_lname', 
+                                        'ua_d', 
+                                        'ua_type_id'
+                                        ]
+                            }
+                        )
+                     ]
+    add_columns = [
+                    'ua_id', 
+                    'ua_lname', 
+                    'ua_d', 
+                    'ua_type_id'
+                    ]
+    edit_columns = add_columns
+
+
+class GlobalConfigMenu(MasterDetailView):
+    datamodel = SQLAInterface(moto_models.C_UA_Type)
+    related_views = [ConfigMarkets,ConfigUAType]
+
+appbuilder.add_view(GlobalConfigMenu, "Global Config Menu", icon="fa-folder-open-o", category="Global Configurations")
+#appbuilder.add_separator("Global Configurations")
+appbuilder.add_view(ConfigDataProvider, "Data Provider", icon="fa-envelope", category="Global Configurations")
+'''
+ConfigDpAPI ---
+ConfigDpApiInput
+ConfigDpApiOutput
+ConfigMdataType
+ConfigMdataToDp
+ConfigMdata
+ConfigSa
+ConfigSaOut
+ConfigSaPar
+ConfigUaTradable
+ConfigUatToDp
+ConfigUnderlyingAsset
+'''
+appbuilder.add_view(ConfigDpAPI(), 'ConfigDpAPI',
+    label='ConfigDpAPI',
+    icon='fa-wrench',
+    category='Global Configurations 2',
+    category_label='Global Configurations 2',
+    category_icon='fa-wrench'
+)
+
+'''
+appbuilder.add_view(ConfigMarkets(), 'Markets Config',
+    label='Markets Config',
+    icon='fa-wrench',
+    category='Global Configurations',
+    category_label='Global Configurations',
+    category_icon='fa-wrench'
+)
+appbuilder.add_view(ConfigUAType(), 'UAT Config',
+    label='UAT Config',
+    icon='fa-flask',
+    category='Global Configurations',
+    category_label='Global Configurations',
+    category_icon='fa-wrench'
+)
+appbuilder.add_view(ConfigDataProvider(), 'Data Provider Config',
+    label='Data Provider Config',
+    icon='fa-flask',
+    category='Global Configurations',
+    category_label='Global Configurations',
+    category_icon='fa-wrench'
+)
+'''
+
+"""
+class AithoFormModel(SupersetModelView):  # noqa
+    datamodel = SQLAInterface(models.AithoModel)
+
+    label_columns = {'name':'Name'}
+    list_columns = ['name']
+
+    show_fieldsets = [
+                        (
+                            'Summary',
+                            {'fields':['name','address','contact_group']}
+                        ),
+                        (
+                            'Personal Info',
+                            {'fields':['birthday','personal_phone','personal_cellphone'],'expanded':False}
+                        ),
+                     ]
+    #default_view = 'msg'
+    #@expose('/msg')
+    #def msg(self):
+    #    return self.render_template(
+    #        'superset/aitho_form.html', route_base=self.route_base
+    #    )
+
+
+appbuilder.add_view(AithoFormModel(), 'Aitho Form Model',
+    label='Aitho Form',
+    icon='fa-wrench',
+    category='',
+    category_label='',
+    category_icon='')
+
+
+
+
+class AithoForm(BaseSupersetView):  # noqa
+    route_base = "/aitho"
+    default_view = 'msg'
+    @expose('/msg')
+    def msg(self):
+        return self.render_template(
+            'superset/aitho_form.html', route_base=self.route_base
+        )
+
+
+appbuilder.add_view(AithoForm(), 'Aitho Form',
+    label='Aitho Form',
+    icon='fa-wrench',
+    category='',
+    category_label='',
+    category_icon='')
+"""
+
+###############################################################
+                        # ENDING MOTO #
+###############################################################
 
 @app.after_request
 def apply_caching(response):

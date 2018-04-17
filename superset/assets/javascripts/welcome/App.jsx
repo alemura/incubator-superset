@@ -44,10 +44,10 @@ export default class App extends React.PureComponent {
               <DashboardTable search={this.state.search} />
             </Panel>
           </Tab>
-          <Tab eventKey={2} title={t('Recently Viewedsss')}>
+          <Tab eventKey={2} title={t('Recently Viewed')}>
             <Panel>
               <Row>
-                <Col md={8}><h2>{t('Recently Viewedss')}</h2></Col>
+                <Col md={8}><h2>{t('Recently Viewed')}</h2></Col>
               </Row>
               <hr />
               <RecentActivity user={this.props.user} />

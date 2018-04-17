@@ -41,3 +41,6 @@ superset/static/*
 *.iml
 venv
 @eaDir/
+
+superset/assets/node_modules
+superset/assets/dist

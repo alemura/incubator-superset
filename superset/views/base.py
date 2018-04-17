@@ -106,6 +106,23 @@ class SupersetModelView(ModelView):
     page_size = 100
     list_widget = SupersetListWidget
 
+'''
+## MOTO ##
+class MotoListWidget(ListWidget):
+    template = 'superset/fab_overrides/moto_global_configurations.html'
+
+
+class TimeChartView(ModelView):
+    page_size = 100
+    list_widget = MotoListWidget
+
+
+class MasterDetailView(ModelView):
+    page_size = 100
+    list_widget = MotoListWidget
+
+#########
+'''
 
 class ListWidgetWithCheckboxes(ListWidget):
     """An alternative to list view that renders Boolean fields as checkboxes
